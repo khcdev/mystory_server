@@ -1,11 +1,12 @@
 const dbPool = require('../config/dbconfig');
+const token = require('../util/jwt');
 
 exports.test = async (req, res) => {
     console.log("Hello World");
     res.send(200, "Hello");  
 }
 
-exports.login = async (req, res) => {
+exports.login = (req, res) => {
 
     console.log('[API : /api/login] Success');
 
@@ -29,7 +30,7 @@ exports.login = async (req, res) => {
         let email = req.body.email;
         let pw = req.body.pw;
 
-        let selectQuery = 'SELECT * FROM USER WHERE email = ?;';
+        let selectQuery = 'SELECT userid, uuid, email, name, password FROM USER WHERE email = ?;';
 
         conn.query(selectQuery, email, (err, queryResult) => {
 
@@ -55,15 +56,17 @@ exports.login = async (req, res) => {
             if(data.password == pw){
 
                 console.log('valid');
+                let authToken = token.createToken(data);
 
                 let responseObject = {
 
                     'code' : 1,
-                    'token' : null,
+                    'token' : authToken,
                     'content' : '로그인을 성공하셨습니다.'
 
                 };
 
+                res.cookie('MyStoryToken', authToken);
                 res.status(200).send(responseObject);
                 
 
@@ -85,3 +88,4 @@ exports.login = async (req, res) => {
     });
 
 }
+
