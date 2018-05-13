@@ -19,10 +19,7 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.3",
-<<<<<<< HEAD
     "jsonwebtoken": "^8.2.1",
-=======
->>>>>>> 184225d939d27be0b3844a4700888d62d9e06e64
     "moment": "^2.22.1",
     "morgan": "^1.9.0",
     "mysql": "^2.15.0"
