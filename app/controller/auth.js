@@ -1,4 +1,4 @@
-const { getDBConnection, queryExecute} = require('../../util/db');
+const { getDBConnection, queryExecute } = require('../../util/db');
 const moment = require('moment');
 var path = require('path');
 const mysql = require('mysql');
@@ -63,6 +63,7 @@ exports.findID = async (req, res) => {
         });
     });
 }
+
 exports.findPW = async (req, res) => {
     const { name, email } = req.body;
     //console.log(name, phone);
@@ -115,21 +116,25 @@ exports.findPW = async (req, res) => {
     });
 }
 
+/*
+    login 기능
+    query에서 받아온 password랑 비교해서 같으면 token발행
+*/
 exports.login = async (req, res) => {
 
     console.log('[API : /api/login] Success');
 
-    const { email, pw } = req.body;
+    const { email, password } = req.body;
 
     let conn = await getDBConnection();
 
     let selectQuery = 'SELECT userid, uuid, email, name, password FROM USER WHERE email = ?;';
     let data = await queryExecute(conn, selectQuery, email);
-    
-    if (data[0].password == pw) {
+
+    if (data[0].password == password) {
 
         console.log('valid');
-        let authToken = token.createToken(data);
+        let authToken = token.createToken(data[0]);
 
         let responseObject = {
 
@@ -139,7 +144,8 @@ exports.login = async (req, res) => {
 
         };
 
-        res.cookie('MyStoryToken', authToken);
+        //https 방식으로만 전송이 된다 이유: js에서 cookie값을 변경 못하게 하기 위해서
+        res.cookie('MyStoryToken', authToken, { 'httpOnly': true });
         res.status(200).send(responseObject);
 
 
@@ -156,82 +162,15 @@ exports.login = async (req, res) => {
 
     }
 
-    // dbPool.getConnection((err, conn) => {
+}
 
-    //     if(err){
+exports.authValid = (req, res) => {
 
-    //         let dbPoolObject = {
+    const clientToken = req.body.clientToken;
+    let decode = token.validToken(clientToken);
 
-    //             'code' : 0,
-    //             'content' : 'DBpool에서 에러 발생'
+    res.status(200).send(decode);
 
-    //         };
-
-    //         console.log('error dbconfig : ', err);
-    //         res.status(404).send(dbPoolObject);
-    //         conn.release();
-
-    //     }
-
-    //     let email = req.body.email;
-    //     let pw = req.body.pw;
-
-    //     let selectQuery = 'SELECT userid, uuid, email, name, password FROM USER WHERE email = ?;';
-
-    //     conn.query(selectQuery, email, (err, queryResult) => {
-
-    //         if(err){
-
-    //             let queryObject = {
-
-    //                 'code' : 0,
-    //                 'content' : 'Query에서 에러 발생'
-
-    //             }
-
-    //             conn.release();
-    //             console.log('error query : ', err);
-    //             res.status(404).send(queryObject);
-
-    //         }
-
-    //         conn.release();
-
-    //         let data = queryResult[0];
-
-    // if(data.password == pw){
-
-    //     console.log('valid');
-    //     let authToken = token.createToken(data);
-
-    //     let responseObject = {
-
-    //         'code' : 1,
-    //         'token' : authToken,
-    //         'content' : '로그인을 성공하셨습니다.'
-
-    //     };
-
-    //     res.cookie('MyStoryToken', authToken);
-    //     res.status(200).send(responseObject);
-
-
-    // }else{
-
-    //     let responseObject = {
-
-    //         'code' : 0,
-    //         'content' : '아이디 또는 비밀번호를 다시 확인해주세요'
-
-    //     };
-
-    //     res.status(200).send(responseObject);
-
-    // }
-
-    //     });
-
-    // });
 }
 
 exports.signUp = async (req, res) => {
@@ -263,3 +202,11 @@ exports.signUpMain = async (req, res) => {
 exports.memberLeave = async (req, res) => {
     console.log("Sign Up");
 }
+
+// function authValid(authToken) {
+
+//     const clientToken = authToken.join('.');
+
+//     return token.validToken(clientToken);
+
+// }
