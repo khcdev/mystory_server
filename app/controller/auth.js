@@ -173,28 +173,31 @@ exports.authValid = (req, res) => {
 
 }
 
-exports.signUp = async (req, res) => {
+// 회원가입 화면 불러옴
+exports.signUp = async(req, res) =>{
     console.log("Sign Up");
 };
 
-exports.signUpMain = async (req, res) => {
+// 회원가입 정보 입력
+exports.signUpMain = async(req, res) => {
     let current_date = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
-    var post = {
-        name: req.body.name,
-        userid: null, uuid: null,
-        password: req.body.password,
-        phone: req.body.phone,
-        email: req.body.email,
-        age: rea.body.age,
-        sex: req.body.sex,
-        c_date: current_date
-    };
-    console.log(req.body.userid);
+    var post  = { name: req.body.name, userid:null, uuid:null, password:req.body.password, phone:req.body.phone, email:req.body.email, age:req.body.age, sex:req.body.sex, c_date:current_date };
+
     sql = 'INSERT INTO USER SET ?'
-    dbPool.getConnection(function (err, conn) {
-        conn.query(sql, post, function (err, result) {
+    dbPool.getConnection(function(err, conn){
+
+        if (err) {
+            res.send(400, {code: -1})
+        }
+
+        conn.query(sql, post, function(err, result){
             console.log(result);
-            res.send(result);
+            //res.send(result);
+            
+            let resMess = {
+                  'msg': 'success'
+            };
+            res.status(200).send(resMess);
         });
     });
 }
@@ -203,10 +206,47 @@ exports.memberLeave = async (req, res) => {
     console.log("Sign Up");
 }
 
-// function authValid(authToken) {
 
-//     const clientToken = authToken.join('.');
+// 프로젝트 생성 화면 불러옴
+exports.proj = async(req, res) => {
+    console.log("Project create");
+}
 
-//     return token.validToken(clientToken);
+// 프로젝트 생성 페이지
+exports.projCreate = async(req, res) => {
+    var post  = { proj_num:null, proj_name:req.body.name, proj_role:req.body.role, proj_startDate:req.body.startDate, proj_endDate:req.body.endDate, proj_des:req.body.des, proj_git:req.body.git };
+    
+    sql = 'INSERT INTO PROJECT SET ?'
+    
+    dbPool.getConnection(function(err, conn){
+        if (err) {
+            res.send(400, {code: -1})
+        }
+        
+        if(!req.body.name){
+            let resMes={
+                'msg':'Insert Project Name'
+            }
+            res.status(400).send(resMes);
+            console.log('Insert Project Name');
+        }
+        else{
+            conn.query(sql, post, function(err, result){
+                console.log(result);
+            
+                let resMess = {
+                    'msg': 'success'
+                };
+                res.status(200).send(resMess);
+            });
+        }
+    });
+}
 
-// }
+
+// 프로젝트 수정 페이지
+exports.projModify = async(req, res) => {
+
+
+    
+}
