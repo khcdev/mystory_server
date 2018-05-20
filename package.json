@@ -20,6 +20,7 @@
     "body-parser": "^1.18.2",
     "express": "^4.16.3",
     "morgan": "^1.9.0",
-    "mysql": "^2.15.0"
+    "mysql": "^2.15.0",
+    "node-status": "^1.0.0"
   }
 }
