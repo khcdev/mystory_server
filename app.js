@@ -14,7 +14,7 @@ app.use('/api', router);
 
 // query_test
 app.get('/testdb', async (req,res, next) => {
-    if(req){ next(err);}
+   // if(req){ next(err);}
     let conn = await getDBConnection();
     let result = await queryExecute(conn, "select email, name from USER");
     console.log(result);
