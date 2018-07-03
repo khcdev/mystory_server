@@ -1,7 +1,7 @@
-
 const router = require('express').Router()
 const { test, findID, findPW, login, signUp, signUpMain, memberLeave } = require('./app/controller/auth')
 const { proj, projCreate, projModify, projDelete, projShow } = require('./app/controller/project');
+const {  } = require('./app/controller/tag');
 const {validToken} = require('./app/util/jwt');
 
 router.get('/test', test);
@@ -23,6 +23,10 @@ router.route('/project')
 router.route('/projDetail')
 .post(projShow);
 
+/*
+router.route('tag')
+.post(getTagName);
+*/
 //router.use(validToken);
 
 module.exports = router

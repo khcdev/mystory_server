@@ -1,4 +1,4 @@
-const { getDBConnection, queryExecute } = require('../../util/db');
+const { getDBConnection, queryExecute } = require('../util/db');
 const moment = require('moment');
 var path = require('path');
 const mysql = require('mysql');

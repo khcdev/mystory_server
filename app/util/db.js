@@ -1,4 +1,4 @@
-const dbPool = require("../app/config/dbconfig");
+const dbPool = require("../config/dbconfig");
 
 exports.getDBConnection = () => {
     return new Promise( (resolve, reject) => {

@@ -1,4 +1,4 @@
-const { getDBConnection, queryExecute} = require('../../util/db');
+const { getDBConnection, queryExecute} = require('../util/db');
 const moment = require('moment');
 var path = require('path');
 const mysql = require('mysql');
@@ -6,12 +6,12 @@ const express = require('express');
 const dbPool = require('../config/dbconfig');
 
 // 프로젝트 생성 화면 불러옴
-exports.proj = async(req, res) => {
+exports.proj = async(req, res, next) => {
     console.log("Project create");
 }
 
 // 프로젝트 생성 페이지
-exports.projCreate = async(req, res) => {
+exports.projCreate = async(req, res, next) => {
     var post  = { user_id:req.body.user_id, 
                   proj_num:null, 
                   proj_name:req.body.name, 
@@ -22,7 +22,10 @@ exports.projCreate = async(req, res) => {
                   proj_git:req.body.git };
     
     sql = 'INSERT INTO PROJECT SET ?'
-    
+
+    stack_sql_search = 'SELECT * FROM STACK';
+    stack_sql_insert = 'INSERT INTO STACK SET ?'
+
     dbPool.getConnection(function(err, conn){
         if (err) {
             res.send(400, {code: -1})
@@ -48,9 +51,29 @@ exports.projCreate = async(req, res) => {
     });
 }
 
+// stack 검색 기능
+function stackSearch() {
+    var tag_search = {
+        stack_num:null,
+        stack_name:req.body.stack_name
+    };
+
+    sql_search = 'SELECT * FROM STACK';
+
+    dbPool.getConnection(function(err, conn){
+        if (err) {
+            res.send(400, {code: -1})
+        }
+        else{
+            conn.query(sql_search, tag_search, function(err, result){
+                console.log('SEARCH ALL STACK!');
+            })
+        }
+    })
+}
 
 // 프로젝트 수정 페이지
-exports.projModify = async(req, res) => {
+exports.projModify = async(req, res, next) => {
     var targetData  = { proj_name:req.body.name, 
                         proj_role:req.body.role, 
                         proj_startDate:req.body.startDate, 
@@ -88,14 +111,15 @@ exports.projModify = async(req, res) => {
 }
 
 // 프로젝트 삭제 페이지
-exports.projDelete = async(req, res) => {
+exports.projDelete = async(req, res, next) => {
     let id = req.body.id;
 
     sql = 'DELETE FROM PROJECT where proj_num=?';
     
     dbPool.getConnection(function(err, conn){
         if (err) {
-            res.send(400, {code: -1})
+            next(err);
+            // res.send(400, {code: -1})
         }
         
         conn.query(sql, id, function(err, result){
@@ -110,7 +134,7 @@ exports.projDelete = async(req, res) => {
 }
 
 // 프로젝트 검색 페이지
-exports.projShow = async(req, res) => {
+exports.projShow = async(req, res, next) => {
     let id = req.body.id;
 
     sql = 'SELECT * FROM PROJECT where proj_num=?';
