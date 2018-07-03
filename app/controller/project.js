@@ -20,17 +20,14 @@ exports.projCreate = async(req, res, next) => {
                   proj_endDate:req.body.endDate, 
                   proj_des:req.body.des, 
                   proj_git:req.body.git };
-    
-    sql = 'INSERT INTO PROJECT SET ?'
 
-    stack_sql_search = 'SELECT * FROM STACK';
-    stack_sql_insert = 'INSERT INTO STACK SET ?'
+    sql = 'INSERT INTO PROJECT SET ?'
 
     dbPool.getConnection(function(err, conn){
         if (err) {
             res.send(400, {code: -1})
         }
-        
+
         if(!req.body.name || !req.body.role || !req.body.startDate || !req.body.des){
             let resMes={
                 'message':'Insert Data'
@@ -41,7 +38,7 @@ exports.projCreate = async(req, res, next) => {
         else{
             conn.query(sql, post, function(err, result){
                 console.log(result);
-            
+
                 let resMess = {
                     'message': 'success'
                 };
@@ -51,6 +48,7 @@ exports.projCreate = async(req, res, next) => {
     });
 }
 
+/*
 // stack 검색 기능
 function stackSearch() {
     var tag_search = {
@@ -71,6 +69,7 @@ function stackSearch() {
         }
     })
 }
+*/
 
 // 프로젝트 수정 페이지
 exports.projModify = async(req, res, next) => {
@@ -78,18 +77,18 @@ exports.projModify = async(req, res, next) => {
                         proj_role:req.body.role, 
                         proj_startDate:req.body.startDate, 
                         proj_endDate:req.body.endDate, 
-                        proj_des:req.body.des, 
+                        proj_des:req.body.des,
                         proj_git:req.body.git };
 
     let id = req.body.id;
 
     sql = 'UPDATE PROJECT SET ? where proj_num=?';
-    
+
     dbPool.getConnection(function(err, conn){
         if (err) {
             res.send(400, {code: -1})
         }
-        
+
         if(!req.body.name || !req.body.role || !req.body.startDate || !req.body.des){
             let resMes={
                 'message':'Insert Data'
@@ -100,7 +99,7 @@ exports.projModify = async(req, res, next) => {
         else{
             conn.query(sql,[targetData, id], function(err, result){
                 console.log(result);
-            
+
                 let resMess = {
                     'message': 'success'
                 };
@@ -115,16 +114,16 @@ exports.projDelete = async(req, res, next) => {
     let id = req.body.id;
 
     sql = 'DELETE FROM PROJECT where proj_num=?';
-    
+
     dbPool.getConnection(function(err, conn){
         if (err) {
             next(err);
             // res.send(400, {code: -1})
         }
-        
+
         conn.query(sql, id, function(err, result){
             console.log(result);
-           
+
             let resMess = {
                 'message': 'success'
             };
@@ -138,15 +137,15 @@ exports.projShow = async(req, res, next) => {
     let id = req.body.id;
 
     sql = 'SELECT * FROM PROJECT where proj_num=?';
-    
+
     dbPool.getConnection(function(err, conn){
         if (err) {
             res.send(400, {code: -1})
         }
-        
+
         conn.query(sql, id, function(err, result){
             console.log(result[0]);
-           
+
             let resMess = {
                 'message': 'success'
             };

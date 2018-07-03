@@ -20,7 +20,7 @@ exports.queryExecute = (conn, sql, args) => {
                conn.release();
                return reject(err);
            }
-           resolve(result); 
+           resolve(result);
         })
     });
 }

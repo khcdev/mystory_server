@@ -193,7 +193,7 @@ exports.signUpMain = async(req, res) => {
         conn.query(sql, post, function(err, result){
             console.log(result);
             //res.send(result);
-            
+
             let resMess = {
                   'msg': 'success'
             };

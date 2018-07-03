@@ -1,4 +1,4 @@
-const { getDBConnection, queryExecute} = require('../util/db');
+const { getDBConnection, queryExecute} = require('./app/util/db');
 const express = require("express");
 const morgan = require("morgan");
 const router = require('./router');
