@@ -8,7 +8,8 @@ const dbPool = require('../config/dbconfig');
 // 태그 추가
 // 태그를 입력했을 때, DB에 입력받은 태그가 없으면 DB에 추가
 exports.getTagName = async(res, req, next) => {
-    var post  = { stack_name = req.body.tagName, stack_num = null };
+    var post  = { stack_name:req.body.tagName, 
+                    stack_num:null };
     
     sql = 'INSERT INTO STACK SET ?'
 
@@ -42,7 +43,7 @@ exports.getTagName = async(res, req, next) => {
 // 태그 검색
 // 입력하는 글자 그대로의 태그를 스택 테이블에서 검색.. 없으면 추가..! 있으면 그 태그 사용!
 exports.showTag = async(res, req, next) => {
-    var post  = { stack_name = req.body.tagName, stack_num = null };
+    var post  = { stack_name : req.body.tagName, stack_num : null };
     
     sql = 'SELECT * FROM STACK where stack_name=?';
 
