@@ -1,4 +1,4 @@
-const dbPool = require("../app/config/dbconfig");
+const dbPool = require("../config/dbconfig");
 
 exports.getDBConnection = () => {
     return new Promise( (resolve, reject) => {
@@ -20,7 +20,7 @@ exports.queryExecute = (conn, sql, args) => {
                conn.release();
                return reject(err);
            }
-           resolve(result); 
+           resolve(result);
         })
     });
 }

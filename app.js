@@ -1,11 +1,10 @@
 // import { request } from "https";
 
-const { getDBConnection, queryExecute} = require('./db');
+const { getDBConnection, queryExecute} = require('./app/util/db');
 const express = require("express");
 const morgan = require("morgan");
 const router = require('./router');
 const bodyParser = require('body-parser');
-const db = require('./db')
 const app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
